@@ -124,10 +124,10 @@ where
 
         let bounds = limits.max();
 
-        let (width, height) =
+        let (width, _) =
             renderer.measure(&self.content, size, self.font.unwrap_or_default(), bounds);
 
-        let size = limits.resolve(Size::new(width, height));
+        let size = limits.resolve(Size::new(width, size as f32));
 
         iced_native::layout::Node::new(size)
     }
@@ -143,6 +143,7 @@ where
         _viewport: &Rectangle,
     ) {
         let bounds = layout.bounds();
+        // println!("layout bounds :{bounds:?}");
 
         let x = match self.horizontal_alignment {
             Horizontal::Left => bounds.x,
@@ -156,6 +157,26 @@ where
             Vertical::Bottom => bounds.y + bounds.height,
         };
 
+        renderer.fill_quad(
+            iced_native::renderer::Quad{
+                bounds,
+                border_radius: 0.0.into(),
+                border_width: 0.0,
+                border_color: Color::TRANSPARENT,
+            },
+            Color::from([0.0, 1.0, 1.0, 0.5])
+        );
+
+        renderer.fill_quad(
+            iced_native::renderer::Quad{
+                bounds: Rectangle { x, y, ..bounds },
+                border_radius: 0.0.into(),
+                border_width: 0.0,
+                border_color: Color::TRANSPARENT,
+            },
+            Color::from([1.0, 0.0, 1.0, 0.5])
+        );
+
         renderer.fill_text(iced_native::text::Text {
             content: &self.content,
             bounds: Rectangle { x, y, ..bounds },
@@ -163,7 +184,8 @@ where
             color: self.color.unwrap_or(style.text_color),
             font: self.font.unwrap_or(crate::graphics::icons::ICON_FONT),
             horizontal_alignment: self.horizontal_alignment,
-            vertical_alignment: self.vertical_alignment,
+            // vertical_alignment: self.vertical_alignment,
+            vertical_alignment: Vertical::Top,
         });
     }
 }

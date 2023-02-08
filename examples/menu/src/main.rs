@@ -4,13 +4,14 @@ use iced::{Application, Length, Color, alignment, theme, Element,};
 
 use iced_aw::menu::{MenuBar, MenuTree, PathHighlight};
 use iced_aw::quad;
+use iced_aw::Icon;
+use iced_aw::native::IconText;
 
 pub fn main() -> iced::Result{
     App::run(iced::Settings{
-        default_text_size: 15,
+        default_text_size: 30,
         window: iced::window::Settings{
             size: (800, 500),
-            // position: iced::window::Position::Default,
             ..Default::default()
         },
         ..Default::default()
@@ -51,9 +52,6 @@ impl Application for App{
             primary: Color::from([0.45, 0.25, 0.57]),
             ..iced::Theme::Light.palette()
         });
-        /*
-        [0.45, 0.25, 0.57]
-        */
 
         (
             Self{
@@ -136,19 +134,39 @@ impl Application for App{
             menu_3(self),
         ])
             .spacing(4)
-            .item_size([180.0, 25.0])
+            .item_size([180.0, 40.0])
             .bounds_expand(30)
             .path_highlight(Some(PathHighlight::MenuActive))
             ;
         
+        // let icon_button = button(
+        //     row![
+        //         IconText::new(Icon::ArrowRight)
+        //             .color(Color::BLACK)
+        //             // .height(Length::Fill)
+        //             .width(Length::Units(30))
+        //             .vertical_alignment(alignment::Vertical::Top),
+        //         IconText::new(Icon::ArrowRight)
+        //             .color(Color::BLACK)
+        //             // .height(Length::Fill)
+        //             .width(Length::Units(30))
+        //             .vertical_alignment(alignment::Vertical::Center),
+        //         IconText::new(Icon::ArrowRight)
+        //             .color(Color::BLACK)
+        //             // .height(Length::Fill)
+        //             .width(Length::Units(30))
+        //             .vertical_alignment(alignment::Vertical::Bottom),
+        //     ].spacing(4)
+        // );
+
         let r = row!(
             horizontal_space(Length::Units(8)),
             mb,
+            // icon_button,
         ).padding([2,0]);
 
         let top_bar_style:fn(&iced::Theme)->container::Appearance = |_theme|{
             container::Appearance{
-                // background: Some(Color::from([0.8;3]).into()),
                 background: Some(Color::TRANSPARENT.into()),
                 ..Default::default()
             }
@@ -193,11 +211,9 @@ struct ButtonStyle;
 
         fn active(&self, style: &Self::Style) -> button::Appearance {
             button::Appearance{
-                // text_color: Color::BLACK,
                 text_color: style.extended_palette().background.base.text,
                 border_radius: 4.0.into(),
                 background: Some(Color::TRANSPARENT.into()),
-                // background: Some(Color::from_rgba(0.0, 0.0, 0.0, 0.2).into()),
                 ..Default::default()
             }
         }
@@ -206,9 +222,6 @@ struct ButtonStyle;
             let plt = style.extended_palette();
             
             button::Appearance{
-                // background: Some(Color::from_rgba(0.0, 0.0, 0.0, 0.8).into()),
-                // background: Some(Color::TRANSPARENT.into()),
-                // border_radius: 4.0.into(),
                 background: Some(plt.primary.weak.color.into()),
                 text_color: plt.primary.weak.text,
                 ..self.active(style)
@@ -275,18 +288,31 @@ fn sub_menu<'a>(
     msg: Message, 
     children: Vec<MenuTree<'a, Message, iced::Renderer>>
 ) -> MenuTree<'a, Message, iced::Renderer>{
+    
     MenuTree::with_children(
         base_button(
+            // text(Icon::CaretRightFill).font(iced_aw::ICON_FONT)
+            //     .height(Length::Fill)
+            //     .vertical_alignment(alignment::Vertical::Center),
             row![
-                text(label)
-                    .width(Length::Fill)
-                    .height(Length::Fill)
+                // text(label)
+                //     .width(Length::Fill)
+                //     .height(Length::Fill)
+                //     .vertical_alignment(alignment::Vertical::Center), 
+
+                IconText::new(Icon::CaretRight)
+                    // .height(Length::Fill)
+                    .width(Length::Units(35))
+                    .vertical_alignment(alignment::Vertical::Top), 
+                IconText::new(Icon::CaretRightFill)
+                    // .height(Length::Fill)
+                    .width(Length::Units(35))
                     .vertical_alignment(alignment::Vertical::Center), 
-                text(" > ")
-                    .size(20)
-                    .height(Length::Fill)
-                    .vertical_alignment(alignment::Vertical::Center), 
-            ],
+                IconText::new(Icon::ArrowDownSquare)
+                    // .height(Length::Fill)
+                    .width(Length::Units(35))
+                    .vertical_alignment(alignment::Vertical::Bottom), 
+            ].spacing(4),
             msg
         )
         .width(Length::Fill)
